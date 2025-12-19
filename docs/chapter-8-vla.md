@@ -1,4 +1,4 @@
-# Chapter 8: Vision-Language-Action (VLA) & Conversational Robotics
+# Chapter 8: Vision-Language-Action VLA & Conversational Robotics
 
 ## What is VLA?
 - VLA combines:
@@ -44,3 +44,4 @@ Example: "Pick up the red box" → Robot sees box, plans action, picks it up
 - VLA = see, understand, act  
 - Voice-to-Action converts speech to tasks  
 - Multi-modal interaction makes robots smarter
+
