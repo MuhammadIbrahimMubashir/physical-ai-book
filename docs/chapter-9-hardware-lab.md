@@ -1,16 +1,16 @@
 # Chapter 9: Summary, Hardware, and Lab Setup
 
 ## Hardware Requirements
-1. **Sim Rig (Workstation)**
-   - PC with NVIDIA RTX GPU (e.g., 4070 Ti or higher)  
+1. **Sim Rig Workstation**
+   - PC with NVIDIA RTX GPU e.g., 4070 Ti or higher
    - Runs Isaac Sim, Gazebo, Unity  
    - CPU: Intel i7 / AMD Ryzen 9  
    - RAM: 64 GB recommended  
    - OS: Ubuntu 22.04  
 
 2. **Edge AI Kit**
-   - NVIDIA Jetson Orin Nano (8GB)  
-   - Intel RealSense Camera (RGB + Depth)  
+   - NVIDIA Jetson Orin Nano 8GB  
+   - Intel RealSense Camera RGB + Depth
    - USB microphone for voice commands  
 
 3. **Robots**
@@ -32,7 +32,7 @@
 ---
 
 ## Cloud Lab Option
-- Cloud workstations (AWS / Azure)  
+- Cloud workstations AWS / Azure
 - Use local Jetson kit for real-world testing  
 - Reduces hardware cost but may have latency  
 
@@ -43,3 +43,4 @@
 - Edge AI kits teach Physical AI practically  
 - Robots or proxies allow hands-on learning  
 - Lab can be physical or cloud-based
+
