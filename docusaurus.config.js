@@ -2,8 +2,8 @@
 const config = {
   title: 'Physical AI & Humanoid Robotics',
   tagline: 'Learn Robotics and Physical AI step by step',
-  url: 'https://MuhammadIbrahimMubashir.github.io',
-  baseUrl: '/Physical-Ai-Book/',
+  url: 'https://muhammadibrahimmubashir.github.io',
+  baseUrl: '/physical-ai-book/',
   
   // <<< CHANGE THESE LINES >>>
   onBrokenLinks: 'warn',          // changed from 'throw' to 'warn'
@@ -27,3 +27,4 @@ const config = {
 };
 
 module.exports = config;
+
