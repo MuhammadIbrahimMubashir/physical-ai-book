@@ -18,12 +18,10 @@ const config = {
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js')
         },
-        theme: {
-          customCss: require.resolve('./src/css/custom.css')
-        }
       }
     ]
   ]
 };
 
 module.exports = config;
+
