@@ -1,3 +1,8 @@
+---
+id: chapter-4-urdf
+title: URDF
+---
+
 # Chapter 4: Robot Description (URDF)
 
 ## What is URDF?
@@ -42,3 +47,4 @@ Example: Shoulder joint connects upper arm to torso.
 - URDF describes robot shape and structure  
 - Links = body parts, joints = connections  
 - Visual and collision models help simulation
+
