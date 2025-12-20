@@ -1,3 +1,8 @@
+---
+id: chapter-7-nvidia-isaac
+title: NVIDIA Isaac
+---
+
 # Chapter 7: NVIDIA Isaac AI & Robot Brain
 
 ## What is NVIDIA Isaac?
@@ -34,3 +39,4 @@
 - Isaac Sim → train in virtual world  
 - Isaac ROS → deploy AI on real robots  
 - Nav2 → robot path planning
+
