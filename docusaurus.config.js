@@ -4,21 +4,21 @@ const config = {
   tagline: 'Learn Robotics and Physical AI step by step',
   url: 'https://muhammadibrahimmubashir.github.io',
   baseUrl: '/physical-ai-book/',
-  
-  // <<< CHANGE THESE LINES >>>
-  onBrokenLinks: 'warn',          // changed from 'throw' to 'warn'
-  onBrokenMarkdownLinks: 'warn',  // keep as 'warn'
+
+  onBrokenLinks: 'warn',          
+  onBrokenMarkdownLinks: 'warn',  
 
   favicon: 'img/favicon.ico',
   organizationName: 'MuhammadIbrahimMubashir', 
-  projectName: 'Physical-Ai-Book',
+  projectName: 'physical-ai-book', 
+
   presets: [
     [
       '@docusaurus/preset-classic',
       {
         docs: {
           path: 'docs',
-          routeBasePath: '/',
+          routeBasePath: '/', 
           sidebarPath: require.resolve('./sidebars.js')
         },
       }
@@ -27,4 +27,3 @@ const config = {
 };
 
 module.exports = config;
-
