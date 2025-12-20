@@ -1,3 +1,8 @@
+---
+id: chapter-9-hardware-lab
+title: Hardware Lab
+---
+
 # Chapter 9: Summary, Hardware, and Lab Setup
 
 ## Hardware Requirements
@@ -43,4 +48,5 @@
 - Edge AI kits teach Physical AI practically  
 - Robots or proxies allow hands-on learning  
 - Lab can be physical or cloud-based
+
 
