@@ -1,5 +1,5 @@
 ---
-id: chapter-introduction
+id: chapter-1-introduction
 title: Introduction
 ---
 
@@ -60,4 +60,5 @@ Advantages:
 - Physical AI connects AI with the real world
 - Robots must understand physics
 - Humanoid robots are designed for human environments
+
 
