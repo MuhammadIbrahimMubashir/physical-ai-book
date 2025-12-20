@@ -1,3 +1,8 @@
+---
+id: chapter-3-ros2
+title: ROS 2
+---
+
 # Chapter 3: ROS 2 (Robot Nervous System)
 
 ## What is ROS 2?
@@ -42,3 +47,4 @@ Think of ROS 2 as the robot's **brain and nervous system**.
 - ROS 2 is the robot's brain  
 - Nodes, topics, and services help robots communicate  
 - Python can be used to control ROS 2
+
