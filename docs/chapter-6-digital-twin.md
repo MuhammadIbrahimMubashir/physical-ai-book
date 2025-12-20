@@ -1,3 +1,8 @@
+---
+id: chapter-6-digital-twin
+title: Digital Twin
+---
+
 # Chapter 6: Digital Twin & Unity
 
 ## What is a Digital Twin?
@@ -34,3 +39,4 @@ It behaves like the real robot in software, so you can:
 - Digital Twin = virtual copy of a robot  
 - Unity = 3D visualization software  
 - Helps test robots safely and efficiently
+
