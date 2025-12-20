@@ -1,3 +1,8 @@
+---
+id: chapter-2-foundations-of-robotics
+title: Foundations of Robotics
+---
+
 # Chapter 2: Foundations of Robotics
 
 ## What is a Robot?
@@ -37,3 +42,4 @@ Examples of robots:
 - A robot has sensors, motors, and a brain  
 - Degrees of freedom define movement  
 - Kinematics helps robots move accurately
+
