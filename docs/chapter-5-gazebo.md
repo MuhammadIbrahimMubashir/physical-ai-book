@@ -1,3 +1,8 @@
+---
+id: chapter-5-gazebo
+title: Gazebo
+---
+
 # Chapter 5: Simulation with Gazebo
 
 ## What is Gazebo?
@@ -34,3 +39,4 @@ It allows you to:
 - Gazebo is a robot simulator  
 - Simulates physics and sensors  
 - Helps test robots safely before real deployment
+
