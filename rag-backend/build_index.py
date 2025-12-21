@@ -1,67 +1,32 @@
+# build_index.py
 import os
-import faiss
 import pickle
+import faiss
 from sentence_transformers import SentenceTransformer
+import glob
 
-# ---------------------------
-# Configuration
-# ---------------------------
-DOCS_PATH = "../docs"
-INDEX_PATH = "faiss_index"
-MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
-CHUNK_SIZE = 500
+# Create folder for FAISS index if it doesn't exist
+os.makedirs("rag-backend/faiss_index", exist_ok=True)
 
-os.makedirs(INDEX_PATH, exist_ok=True)
+# Load all chapter files
+chapter_files = sorted(glob.glob("docs/chapter-*.md"))  # adjust if file names differ
+chapters = []
 
-# ---------------------------
-# Load embedding model
-# ---------------------------
-print("Loading embedding model...")
-model = SentenceTransformer(MODEL_NAME)
+for file_path in chapter_files:
+    with open(file_path, "r", encoding="utf-8") as f:
+        chapters.append(f.read())
 
-# ---------------------------
-# Read all markdown files
-# ---------------------------
-documents = []
+# Generate embeddings
+model = SentenceTransformer("all-MiniLM-L6-v2")
+embeddings = model.encode(chapters).astype("float32")
 
-for root, _, files in os.walk(DOCS_PATH):
-    for file in files:
-        if file.endswith(".md"):
-            file_path = os.path.join(root, file)
-            with open(file_path, "r", encoding="utf-8") as f:
-                text = f.read()
-                documents.append(text)
-
-print(f"Loaded {len(documents)} documents")
-
-# ---------------------------
-# Split text into chunks
-# ---------------------------
-chunks = []
-
-for doc in documents:
-    for i in range(0, len(doc), CHUNK_SIZE):
-        chunks.append(doc[i:i + CHUNK_SIZE])
-
-print(f"Created {len(chunks)} text chunks")
-
-# ---------------------------
-# Create embeddings
-# ---------------------------
-print("Creating embeddings...")
-embeddings = model.encode(chunks)
-
-dimension = embeddings.shape[1]
-index = faiss.IndexFlatL2(dimension)
+# Build FAISS index
+index = faiss.IndexFlatL2(embeddings.shape[1])
 index.add(embeddings)
 
-# ---------------------------
-# Save index and chunks
-# ---------------------------
-faiss.write_index(index, os.path.join(INDEX_PATH, "index.faiss"))
+# Save index and docs
+faiss.write_index(index, "rag-backend/faiss_index/index.faiss")
+with open("rag-backend/faiss_index/docs.pkl", "wb") as f:
+    pickle.dump(chapters, f)
 
-with open(os.path.join(INDEX_PATH, "chunks.pkl"), "wb") as f:
-    pickle.dump(chunks, f)
-
-print("FAISS index built and saved successfully")
-
+print("✅ FAISS index and docs.pkl have been created successfully!")
