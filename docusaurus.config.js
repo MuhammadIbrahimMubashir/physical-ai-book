@@ -16,11 +16,12 @@ module.exports = {
       {
         docs: {
           path: 'docs',
-          routeBasePath: '/',
+          routeBasePath: '/docs',
           sidebarPath: require.resolve('./sidebars.js'),
         },
       },
     ],
   ],
 };
+
 
