@@ -1,158 +1,91 @@
 import streamlit as st
-import os
 import pickle
-import faiss
+import numpy as np
 from sentence_transformers import SentenceTransformer
 
-# -----------------------------
-# Functions to build/load index
-# -----------------------------
-def build_faiss_index(docs_path="docs", index_path="faiss_index/index.faiss", docs_pickle_path="faiss_index/docs.pkl"):
-    if not os.path.exists("faiss_index"):
-        os.makedirs("faiss_index")
-    
-    # Load all text files from docs folder
-    texts = []
-    file_names = []
-    for root, dirs, files in os.walk(docs_path):
-        for file in files:
-            if file.endswith(".md"):
-                path = os.path.join(root, file)
-                with open(path, "r", encoding="utf-8") as f:
-                    texts.append(f.read())
-                    file_names.append(file)
-    
-    # Embed texts
-    model = SentenceTransformer('all-MiniLM-L6-v2')
-    embeddings = model.encode(texts)
-    
-    # Create FAISS index
-    dimension = embeddings.shape[1]
-    index = faiss.IndexFlatL2(dimension)
-    index.add(embeddings)
-    
-    # Save index and file list
-    faiss.write_index(index, index_path)
-    with open(docs_pickle_path, "wb") as f:
-        pickle.dump(file_names, f)
-    
-    return index, file_names
+# -------------------------------
+# CONFIG
+# -------------------------------
+st.set_page_config(page_title="Physical AI Textbook Chatbot", page_icon="🤖", layout="wide")
 
-def load_faiss_index(index_path="faiss_index/index.faiss", docs_pickle_path="faiss_index/docs.pkl"):
-    if not os.path.exists(index_path) or not os.path.exists(docs_pickle_path):
+# -------------------------------
+# LOAD FAISS INDEX AND DOCUMENTS
+# -------------------------------
+@st.cache_data(show_spinner=True)
+def load_index():
+    """Load the FAISS index and corresponding documents."""
+    try:
+        # Load FAISS index
+        with open("faiss_index/index.pkl", "rb") as f:
+            index = pickle.load(f)
+        # Load documents mapping
+        with open("faiss_index/file_names.pkl", "rb") as f:
+            file_names = pickle.load(f)
+        return index, file_names
+    except Exception as e:
+        st.error("FAISS index or documents not found. Run build_index.py first.")
         return None, None
-    index = faiss.read_index(index_path)
-    with open(docs_pickle_path, "rb") as f:
-        file_names = pickle.load(f)
-    return index, file_names
 
-# -----------------------------
-# Streamlit UI
-# -----------------------------
-st.title("Physical AI Textbook Chatbot")
+index, file_names = load_index()
+
+# -------------------------------
+# EMBEDDING MODEL
+# -------------------------------
+@st.cache_resource
+def load_model():
+    """Load the embedding model once."""
+    return SentenceTransformer("all-MiniLM-L6-v2")
+
+model = load_model()
+
+# -------------------------------
+# SIDEBAR
+# -------------------------------
+st.sidebar.title("Physical AI Textbook Chatbot")
+st.sidebar.info(
+    """
+    Ask anything about the textbook chapters (1-9).  
+    Powered by local FAISS index and embeddings.  
+    """
+)
+
+# -------------------------------
+# CHATBOT INTERFACE
+# -------------------------------
+st.header("Physical AI Textbook Chatbot")
 st.write("Ask anything about the textbook!")
 
-# Load or build index
-index, file_names = load_faiss_index()
-if index is None:
-    st.info("Building FAISS index. Please wait...")
-    index, file_names = build_faiss_index()
-    st.success("FAISS index built!")
+# Initialize chat history
+if "history" not in st.session_state:
+    st.session_state.history = []
 
-# User input
-question = st.text_input("Type your question:")
+# Get user question
+question = st.text_input("Type your question:", key="user_question")
 
-if question and index:
-    # Embed user question
-    model = SentenceTransformer('all-MiniLM-L6-v2')
-    question_vector = model.encode([question])
-    
-    # Search FAISS
-    D, I = index.search(question_vector, k=1)
-    result_file = file_names[I[0][0]]
-    
-    # Show the answer (full text of the matched chapter)
-    with open(os.path.join("docs", result_file), "r", encoding="utf-8") as f:
-        answer_text = f.read()
-    
-    st.subheader("Answer from textbook:")
-    st.write(answer_text)
-import streamlit as st
-import os
-import pickle
-import faiss
-from sentence_transformers import SentenceTransformer
+# -------------------------------
+# PROCESS QUESTION
+# -------------------------------
+if st.button("Ask", key="ask_button"):
+    if not question:
+        st.warning("Please type a question!")
+    elif index is None:
+        st.error("Index not loaded. Please run build_index.py first.")
+    else:
+        # Convert question to embedding
+        question_vector = model.encode([question])
+        
+        # Search FAISS index
+        D, I = index.search(question_vector, k=1)
+        doc_idx = I[0][0]
+        answer_doc = file_names[doc_idx]
 
-# -----------------------------
-# Functions to build/load index
-# -----------------------------
-def build_faiss_index(docs_path="docs", index_path="faiss_index/index.faiss", docs_pickle_path="faiss_index/docs.pkl"):
-    if not os.path.exists("faiss_index"):
-        os.makedirs("faiss_index")
-    
-    # Load all text files from docs folder
-    texts = []
-    file_names = []
-    for root, dirs, files in os.walk(docs_path):
-        for file in files:
-            if file.endswith(".md"):
-                path = os.path.join(root, file)
-                with open(path, "r", encoding="utf-8") as f:
-                    texts.append(f.read())
-                    file_names.append(file)
-    
-    # Embed texts
-    model = SentenceTransformer('all-MiniLM-L6-v2')
-    embeddings = model.encode(texts)
-    
-    # Create FAISS index
-    dimension = embeddings.shape[1]
-    index = faiss.IndexFlatL2(dimension)
-    index.add(embeddings)
-    
-    # Save index and file list
-    faiss.write_index(index, index_path)
-    with open(docs_pickle_path, "wb") as f:
-        pickle.dump(file_names, f)
-    
-    return index, file_names
+        # Save history
+        st.session_state.history.append((question, answer_doc))
 
-def load_faiss_index(index_path="faiss_index/index.faiss", docs_pickle_path="faiss_index/docs.pkl"):
-    if not os.path.exists(index_path) or not os.path.exists(docs_pickle_path):
-        return None, None
-    index = faiss.read_index(index_path)
-    with open(docs_pickle_path, "rb") as f:
-        file_names = pickle.load(f)
-    return index, file_names
-
-# -----------------------------
-# Streamlit UI
-# -----------------------------
-st.title("Physical AI Textbook Chatbot")
-st.write("Ask anything about the textbook!")
-
-# Load or build index
-index, file_names = load_faiss_index()
-if index is None:
-    st.info("Building FAISS index. Please wait...")
-    index, file_names = build_faiss_index()
-    st.success("FAISS index built!")
-
-# User input
-question = st.text_input("Type your question:")
-
-if question and index:
-    # Embed user question
-    model = SentenceTransformer('all-MiniLM-L6-v2')
-    question_vector = model.encode([question])
-    
-    # Search FAISS
-    D, I = index.search(question_vector, k=1)
-    result_file = file_names[I[0][0]]
-    
-    # Show the answer (full text of the matched chapter)
-    with open(os.path.join("docs", result_file), "r", encoding="utf-8") as f:
-        answer_text = f.read()
-    
-    st.subheader("Answer from textbook:")
-    st.write(answer_text)
+# -------------------------------
+# DISPLAY CHAT HISTORY
+# -------------------------------
+for i, (q, a) in enumerate(st.session_state.history):
+    st.markdown(f"**You:** {q}")
+    st.markdown(f"**Answer:** {a}")
+    st.markdown("---")
